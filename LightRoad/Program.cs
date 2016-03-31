@@ -10,7 +10,8 @@ namespace LightRoad
     {
         static void Main(string[] args)
         {
-
+            Visualizer graphic = new Visualizer();
+            graphic.ShowDialog();
         }
     }
 }

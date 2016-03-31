@@ -25,6 +25,9 @@ namespace LightRoad
                 vName = "Unnamed";
                 vPosition = new Vector2D(0.0f, 0.0f);
                 vTravelDirection = 0.0f;
+                engine = new Engine();
+                vWidth = 5;
+                vHeight = 5;
             }
             public BoundingBox2D getBoundingBox()
             {
@@ -51,15 +54,11 @@ namespace LightRoad
                 //TODO: implement impact response code
                 impactSpeed %= 360;
             }
-
-            public Bitmap getDrawableElement()
+            public void Draw(ref Graphics graphics, Vector2D origin)
             {
-                throw new NotImplementedException();
-            }
-
-            public Vector2D getDrawableXY()
-            {
-                throw new NotImplementedException();
+                Rectangle rectangle = new Rectangle((int)origin.x + (int)vPosition.x, (int)origin.y + (int)vPosition.y, (int)vWidth, (int)vHeight);
+                graphics.DrawRectangle(Pens.Red, rectangle);
+                graphics.DrawString(this.getSpeed() + " MPH", SystemFonts.DefaultFont, Brushes.White, new PointF((int)origin.x + (float)vPosition.x, (int)origin.y + (float)vPosition.y - 20));
             }
         }
     }

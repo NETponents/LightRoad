@@ -18,6 +18,14 @@ namespace LightRoad
                 x = ax;
                 y = ay;
             }
+            public static Vector2D operator +(Vector2D a, Vector2D b)
+            {
+                return new Vector2D(a.x + b.x, a.y + b.y);
+            }
+            public static Vector2D operator -(Vector2D a, Vector2D b)
+            {
+                return new Vector2D(a.x - b.x, a.y - b.y);
+            }
         }
         public struct BoundingBox2D
         {

@@ -10,9 +10,9 @@ namespace LightRoad
     {
         public class Engine
         {
-            private double ecAccelerationSpeed;
-            private double ecMaxSpeed;
-            private double ecBreakFactor;
+            private double ecAccelerationSpeed = 0;
+            private double ecMaxSpeed = 0;
+            private double ecBreakFactor = 0;
 
             private double eCurrentSpeed;
 
