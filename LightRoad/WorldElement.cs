@@ -10,6 +10,6 @@ namespace LightRoad
 {
     public interface IWorldElement
     {
-        void Draw(ref Graphics graphics, Vector2D origin);
+        void Draw(Graphics graphics, Vector2D origin);
     }
 }

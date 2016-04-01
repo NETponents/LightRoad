@@ -14,20 +14,28 @@ namespace LightRoad
         Vector2D endPoint;
         string name;
 
-        public Road()
+        public Road(Vector2D startPos, Vector2D endPos, string streetName)
         {
-            startPoint = new Vector2D(0, 0);
-            endPoint = new Vector2D(0, 20);
-            name = "Example Ln";
+            startPoint = startPos;
+            endPoint = endPos;
+            name = streetName;
         }
 
-        public void Draw(ref Graphics graphics, Vector2D origin)
+        public void Draw(Graphics graphics, Vector2D origin)
         {
             graphics.DrawLine(Pens.White,
                 (float)origin.x + (float)startPoint.x,
                 (float)origin.y + (float)startPoint.y,
                 (float)origin.x + (float)endPoint.x,
                 (float)origin.y + (float)endPoint.y);
+        }
+        public string getName()
+        {
+            return name;
+        }
+        public Line getLine()
+        {
+            return new Line(startPoint, endPoint);
         }
     }
 }

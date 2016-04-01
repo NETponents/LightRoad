@@ -17,15 +17,15 @@ namespace LightRoad
         {
 
         }
-        public void drawWorld(ref Graphics drawSurface, Vector2D origin)
+        public void drawWorld(Graphics drawSurface, Vector2D origin)
         {
             foreach(IWorldElement i in roads)
             {
-                i.Draw(ref drawSurface, origin);
+                i.Draw(drawSurface, origin);
             }
             foreach(IWorldElement i in vehicles)
             {
-                i.Draw(ref drawSurface, origin);
+                i.Draw(drawSurface, origin);
             }
         }
         public void addRoad(IWorldElement e)
@@ -42,6 +42,10 @@ namespace LightRoad
             {
                 i.Travel();
             }
+        }
+        public List<IWorldElement> getRoads()
+        {
+            return roads;
         }
     }
 }

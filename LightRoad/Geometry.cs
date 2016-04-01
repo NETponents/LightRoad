@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Drawing;
 
 namespace LightRoad
 {
@@ -18,15 +19,15 @@ namespace LightRoad
                 x = ax;
                 y = ay;
             }
-            public static Vector2D operator +(Vector2D a, Vector2D b)
+            public static Vector2D operator + (Vector2D a, Vector2D b)
             {
                 return new Vector2D(a.x + b.x, a.y + b.y);
             }
-            public static Vector2D operator -(Vector2D a, Vector2D b)
+            public static Vector2D operator - (Vector2D a, Vector2D b)
             {
                 return new Vector2D(a.x - b.x, a.y - b.y);
             }
-            public static bool operator ==(Vector2D a, Vector2D b)
+            public static bool operator == (Vector2D a, Vector2D b)
             {
                 if(a.x == b.x && a.y == b.y)
                 {
@@ -37,7 +38,7 @@ namespace LightRoad
                     return false;
                 }
             }
-            public static bool operator !=(Vector2D a, Vector2D b)
+            public static bool operator != (Vector2D a, Vector2D b)
             {
                 if(a == b)
                 {
@@ -47,6 +48,16 @@ namespace LightRoad
                 {
                     return true;
                 }
+            }
+            public Point ToPoint()
+            {
+                Point p = new Point((int)x, (int)y);
+                return p;
+            }
+            public PointF ToPointF()
+            {
+                PointF p = new PointF((float)x, (float)y);
+                return p;
             }
             public override string ToString()
             {
@@ -96,6 +107,78 @@ namespace LightRoad
                 {
                     return false;
                 }
+            }
+            public bool Intersects(Line r)
+            {
+                Line l1 = new Line(x1, y1, x2, y1);
+                if(r.Intersection(l1))
+                {
+                    return true;
+                }
+                l1 = new Line(x2, y1, x2, y2);
+                if(r.Intersection(l1))
+                {
+                    return true;
+                }
+                l1 = new Line(x2, y2, x1, y2);
+                if(r.Intersection(l1))
+                {
+                    return true;
+                }
+                l1 = new Line(x1, y2, x1, y2);
+                if(r.Intersection(l1))
+                {
+                    return true;
+                }
+                return false;
+            }
+        }
+        public struct Line
+        {
+            Vector2D startPos;
+            Vector2D endPos;
+
+            public Line(Vector2D start, Vector2D end)
+            {
+                startPos = start;
+                endPos = end;
+            }
+            public Line(double x1, double y1, double x2, double y2)
+            {
+                startPos = new Vector2D(x1, y1);
+                endPos = new Vector2D(x2, y2);
+            }
+            public bool Intersection(Line l)
+            {
+                return Collisions.LineIntersects(startPos, endPos, l.startPos, l.endPos);
+            }
+        }
+        static class Collisions
+        {
+            public static bool LineIntersects(Vector2D a1, Vector2D a2, Vector2D b1, Vector2D b2/*, out Vector2D intersection*/)
+            {
+                //intersection = new Vector2D(0, 0);
+
+                Vector2D b = a2 - a1;
+                Vector2D d = b2 - b1;
+                float bDotDPerp = (float)(b.x * d.y - b.y * d.x);
+
+                // if b dot d == 0, it means the lines are parallel so have infinite intersection points
+                if (bDotDPerp == 0)
+                    return false;
+
+                Vector2D c = b1 - a1;
+                float t = (float)(c.x * d.y - c.y * d.x) / bDotDPerp;
+                if (t < 0 || t > 1)
+                    return false;
+
+                float u = (float)(c.x * b.y - c.y * b.x) / bDotDPerp;
+                if (u < 0 || u > 1)
+                    return false;
+
+                //intersection = a1 + t * b;
+
+                return true;
             }
         }
     }
