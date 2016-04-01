@@ -19,12 +19,12 @@ namespace LightRoad
         }
         private Vector2D center;
         private List<Road> connectors;
-        private List<int> connDirection;
+        private List<float> connDirection;
         private const int size = 4;
 
         public Intersection(Vector2D centerPosition, ref World world)
         {
-            connDirection = new List<int>();
+            connDirection = new List<float>();
             connectors = new List<Road>();
             center = centerPosition;
             Line n = new Line(position, new Vector2D(position.x + size, position.y));
@@ -57,11 +57,30 @@ namespace LightRoad
                 }
             }
         }
-
+        public BoundingBox2D getBoundingBox()
+        {
+            return new BoundingBox2D(position, size);
+        }
         public void Draw(Graphics graphics, Vector2D origin)
         {
             Rectangle rectangle = new Rectangle((int)origin.x + (int)position.x, (int)origin.y + (int)position.y, size, size);
             graphics.DrawRectangle(Pens.Blue, rectangle);
+        }
+        public Vector2D getCenterPosition()
+        {
+            return center;
+        }
+        public float getRoadDirection(string streetName)
+        {
+            foreach(Road i in connectors)
+            {
+                if(i.getName() == streetName)
+                {
+                    int index = connectors.IndexOf(i);
+                    return connDirection[index];
+                }
+            }
+            return 0;
         }
     }
 }

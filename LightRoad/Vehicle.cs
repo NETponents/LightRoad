@@ -14,10 +14,18 @@ namespace LightRoad
         {
             protected string vName;
             protected Vector2D vPosition;
+            protected Vector2D vRootPosition
+            {
+                get
+                {
+                    return vPosition - new Vector2D(vWidth / 2, vHeight / 2);
+                }
+            }
             protected double vTravelDirection;
             protected double vWidth;
             protected double vHeight;
             protected World worldRef;
+            protected Queue<string> navigationWaypoints;
 
             private Engine engine;
             private string currentStreet = "EMPTY";
@@ -31,6 +39,7 @@ namespace LightRoad
                 vWidth = 5;
                 vHeight = 5;
                 worldRef = worldPointer;
+                navigationWaypoints = generateNavigationRoute(1);
             }
             public Vehicle(World worldPointer, Vector2D position)
             {
@@ -41,6 +50,7 @@ namespace LightRoad
                 vWidth = 5;
                 vHeight = 5;
                 worldRef = worldPointer;
+                navigationWaypoints = generateNavigationRoute(1);
             }
             public Vehicle(World worldPointer, Vector2D position, string name)
             {
@@ -51,18 +61,73 @@ namespace LightRoad
                 vWidth = 5;
                 vHeight = 5;
                 worldRef = worldPointer;
+                navigationWaypoints = generateNavigationRoute(1);
+            }
+            public Vehicle(World worldPointer, Vector2D position, string name, int navRouteNumber)
+            {
+                vName = name;
+                vPosition = position;
+                vTravelDirection = 0.0f;
+                engine = new Engine();
+                vWidth = 5;
+                vHeight = 5;
+                worldRef = worldPointer;
+                navigationWaypoints = generateNavigationRoute(navRouteNumber);
+            }
+            public Queue<string> generateNavigationRoute(int routeNumber)
+            {
+                Queue<string> route = new Queue<string>();
+                if (routeNumber == 1)
+                {
+                    route.Enqueue("Main St");
+                    route.Enqueue("Turner Place");
+                    route.Enqueue("Microsoft Circle");
+                    route.Enqueue("Utopia Ln");
+                }
+                else if(routeNumber == 2)
+                {
+                    route.Enqueue("Turner Place");
+                    route.Enqueue("Microsoft Circle");
+                    route.Enqueue("Utopia Ln");
+                }
+                return route;
             }
             public BoundingBox2D getBoundingBox()
             {
-                return new BoundingBox2D(vPosition.x, vPosition.y, vWidth, vHeight);
+                return new BoundingBox2D(vRootPosition.x, vRootPosition.y, vWidth, vHeight);
             }
             public virtual void Travel()
             {
-                vPosition.y += 1;
-                if(currentStreet != this.getCurrentStreetName())
+                foreach(IWorldElement i in worldRef.getIntersections())
                 {
-                    currentStreet = this.getCurrentStreetName();
-                    Console.WriteLine(String.Format("Vehicle {0} is now travelling on {1} at {2} MPH.", vName, currentStreet, engine.getSpeed()));
+                    if(this.getBoundingBox().Intersects((i as Intersection).getBoundingBox()))
+                    {
+                        vPosition = (i as Intersection).getCenterPosition();
+                        currentStreet = navigationWaypoints.Dequeue();
+                        vTravelDirection = (i as Intersection).getRoadDirection(currentStreet);
+                        moveInCurrentDirection((float)Math.Max(vWidth, vHeight));
+                        break;
+                    }
+                }
+                moveInCurrentDirection(1.0f);
+            }
+            public void moveInCurrentDirection(float amount)
+            {
+                if(vTravelDirection == 0)
+                {
+                    vPosition.y -= amount;
+                }
+                else if(vTravelDirection == 90)
+                {
+                    vPosition.x += amount;
+                }
+                else if(vTravelDirection == 180)
+                {
+                    vPosition.y += amount;
+                }
+                else if(vTravelDirection == 270)
+                {
+                    vPosition.x -= amount;
                 }
             }
             public string getName()
@@ -84,10 +149,10 @@ namespace LightRoad
             }
             public void Draw(Graphics graphics, Vector2D origin)
             {
-                Rectangle rectangle = new Rectangle((int)origin.x + (int)vPosition.x, (int)origin.y + (int)vPosition.y, (int)vWidth, (int)vHeight);
+                Rectangle rectangle = new Rectangle((int)origin.x + (int)vRootPosition.x, (int)origin.y + (int)vRootPosition.y, (int)vWidth, (int)vHeight);
                 graphics.DrawRectangle(Pens.Red, rectangle);
-                graphics.DrawString(this.getSpeed() + " MPH", SystemFonts.DefaultFont, Brushes.White, new PointF((int)origin.x + (float)vPosition.x, (int)origin.y + (float)vPosition.y - 20));
-                graphics.DrawString(vName, SystemFonts.DefaultFont, Brushes.White, new PointF((int)origin.x + (float)vPosition.x, (int)origin.y + (float)vPosition.y - 40));
+                graphics.DrawString(this.getSpeed() + " MPH", SystemFonts.DefaultFont, Brushes.White, new PointF((int)origin.x + (float)vRootPosition.x, (int)origin.y + (float)vRootPosition.y - 20));
+                graphics.DrawString(vName, SystemFonts.DefaultFont, Brushes.White, new PointF((int)origin.x + (float)vRootPosition.x, (int)origin.y + (float)vRootPosition.y - 40));
             }
             public string getCurrentStreetName()
             {

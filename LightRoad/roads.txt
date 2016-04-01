@@ -1,3 +1,5 @@
 ﻿2,0,48,0,Main St
 0,2,0,48,King Blvd
 0,52,0,98,Utopia Ln
+50,2,50,48,Turner Place
+2,50,48,50,Microsoft Circle

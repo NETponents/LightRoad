@@ -19,7 +19,6 @@ namespace LightRoad
         World simWorld;
         Vector2D capturedPictureBoxSize;
         System.Timers.Timer simulationStepper;
-        bool isDrawSurfaceCaptured = false;
 
         public Visualizer()
         {
@@ -97,10 +96,11 @@ namespace LightRoad
         {
             World world;
             WorldLoader.LoadWorld(out world, "roads.txt", "intersections.txt");
-            world.addVehicle(new Vehicles.Vehicle(world));
+            world.addVehicle(new Vehicles.Vehicle(world, new Vector2D(0,0), "AAA-111", 1));
+            world.addVehicle(new Vehicles.Vehicle(world, new Vector2D(50, 0), "AAB-112", 2));
             this.publishWorld(ref world);
             simulationStepper = new System.Timers.Timer();
-            simulationStepper.Interval = 100;
+            simulationStepper.Interval = 17;
             simulationStepper.Elapsed += SimulationStepper_Tick;
         }
     }
