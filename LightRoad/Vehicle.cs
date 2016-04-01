@@ -63,11 +63,22 @@ namespace LightRoad
                 worldRef = worldPointer;
                 navigationWaypoints = generateNavigationRoute(1);
             }
-            public Vehicle(World worldPointer, Vector2D position, string name, int navRouteNumber)
+            public Vehicle(World worldPointer, Vector2D position, string name, float direction)
             {
                 vName = name;
                 vPosition = position;
-                vTravelDirection = 0.0f;
+                vTravelDirection = direction;
+                engine = new Engine();
+                vWidth = 5;
+                vHeight = 5;
+                worldRef = worldPointer;
+                navigationWaypoints = generateNavigationRoute(1);
+            }
+            public Vehicle(World worldPointer, Vector2D position, string name, float direction, int navRouteNumber)
+            {
+                vName = name;
+                vPosition = position;
+                vTravelDirection = direction;
                 engine = new Engine();
                 vWidth = 5;
                 vHeight = 5;
@@ -87,6 +98,11 @@ namespace LightRoad
                 else if(routeNumber == 2)
                 {
                     route.Enqueue("Turner Place");
+                    route.Enqueue("Microsoft Circle");
+                    route.Enqueue("Utopia Ln");
+                }
+                else if(routeNumber == 3)
+                {
                     route.Enqueue("Microsoft Circle");
                     route.Enqueue("Utopia Ln");
                 }

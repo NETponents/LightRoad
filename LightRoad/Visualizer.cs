@@ -95,9 +95,9 @@ namespace LightRoad
         private void Visualizer_Shown(object sender, EventArgs e)
         {
             World world;
-            WorldLoader.LoadWorld(out world, "roads.txt", "intersections.txt");
-            world.addVehicle(new Vehicles.Vehicle(world, new Vector2D(0,0), "AAA-111", 1));
-            world.addVehicle(new Vehicles.Vehicle(world, new Vector2D(50, 0), "AAB-112", 2));
+            WorldLoader.LoadWorld(out world, "roads.txt", "intersections.txt", "vehicles.txt");
+            world.addVehicle(new Vehicles.Vehicle(world, new Vector2D(0,0), "AAA-111", 0.0f, 1));
+            world.addVehicle(new Vehicles.Vehicle(world, new Vector2D(50, 0), "AAB-112", 0.0f, 2));
             this.publishWorld(ref world);
             simulationStepper = new System.Timers.Timer();
             simulationStepper.Interval = 17;
