@@ -35,7 +35,8 @@ namespace LightRoad
             }
             public virtual void Travel()
             {
-
+                vPosition.y += 1;
+                Console.WriteLine(vPosition.ToString());
             }
             public string getName()
             {

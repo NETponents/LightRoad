@@ -36,5 +36,12 @@ namespace LightRoad
         {
             vehicles.Add(e);
         }
+        public void step()
+        {
+            foreach(Vehicles.Vehicle i in vehicles)
+            {
+                i.Travel();
+            }
+        }
     }
 }

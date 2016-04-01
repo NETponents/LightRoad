@@ -109,15 +109,15 @@
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(92, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
             // stepToolStripMenuItem
             // 
             this.stepToolStripMenuItem.Name = "stepToolStripMenuItem";
-            this.stepToolStripMenuItem.Size = new System.Drawing.Size(42, 20);
-            this.stepToolStripMenuItem.Text = "Step";
+            this.stepToolStripMenuItem.Size = new System.Drawing.Size(103, 20);
+            this.stepToolStripMenuItem.Text = "Start Simulation";
             this.stepToolStripMenuItem.Click += new System.EventHandler(this.stepToolStripMenuItem_Click);
             // 
             // Visualizer
@@ -129,6 +129,7 @@
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Visualizer";
             this.Text = "Visualizer";
+            this.Shown += new System.EventHandler(this.Visualizer_Shown);
             this.toolStripContainer1.BottomToolStripPanel.ResumeLayout(false);
             this.toolStripContainer1.BottomToolStripPanel.PerformLayout();
             this.toolStripContainer1.ContentPanel.ResumeLayout(false);

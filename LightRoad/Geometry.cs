@@ -26,6 +26,32 @@ namespace LightRoad
             {
                 return new Vector2D(a.x - b.x, a.y - b.y);
             }
+            public static bool operator ==(Vector2D a, Vector2D b)
+            {
+                if(a.x == b.x && a.y == b.y)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            public static bool operator !=(Vector2D a, Vector2D b)
+            {
+                if(a == b)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+            public override string ToString()
+            {
+                return String.Format("({0}, {1})", x, y);
+            }
         }
         public struct BoundingBox2D
         {

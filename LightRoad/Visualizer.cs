@@ -17,11 +17,14 @@ namespace LightRoad
         bool isMouseDown = false;
         Vector2D drawOrigin;
         World simWorld;
+        Vector2D capturedPictureBoxSize;
+        Timer simulationStepper;
 
         public Visualizer()
         {
             InitializeComponent();
             drawOrigin = new Vector2D(0, 0);
+            capturedPictureBoxSize = new Vector2D(-1, -1);
         }
 
         private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
@@ -47,14 +50,15 @@ namespace LightRoad
 
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
         {
-            if (pictureBox1.Image == null)
+            Vector2D pbSize = new Vector2D(pictureBox1.Width, pictureBox1.Height);
+            if (pbSize != capturedPictureBoxSize)
             {
-                pictureBox1.Image = new Bitmap(pictureBox1.Width,
-                        pictureBox1.Height);
+                capturedPictureBoxSize = pbSize;
+                pictureBox1.Image = new Bitmap(pictureBox1.Width, pictureBox1.Height);
             }
             Graphics g = Graphics.FromImage(pictureBox1.Image);
-                // draw black background
-                g.Clear(Color.Black);
+            // draw black background
+            g.Clear(Color.Black);
             if (simWorld != null)
             {
                 simWorld.drawWorld(ref g, drawOrigin);
@@ -68,14 +72,36 @@ namespace LightRoad
         }
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            simulationStepper.Stop();
             this.Close();
         }
 
         private void stepToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            
+            simulationStepper.Start();
+        }
+
+        private void SimulationStepper_Tick(object sender, EventArgs e)
+        {
+            Console.WriteLine("5");
+            simWorld.step();
+            pictureBox1_Paint(sender, null);
+        }
+
+        private void Visualizer_Shown(object sender, EventArgs e)
+        {
+            Console.WriteLine("1");
             World world = new World();
+            Console.WriteLine("2");
             world.addVehicle(new Vehicles.Vehicle());
+            world.addRoad(new Road());
+            Console.WriteLine("3");
             this.publishWorld(ref world);
+            Console.WriteLine("4");
+            simulationStepper = new Timer();
+            simulationStepper.Interval = 1000;
+            simulationStepper.Tick += SimulationStepper_Tick;
         }
     }
 }
