@@ -90,10 +90,10 @@ namespace LightRoad
                 Queue<string> route = new Queue<string>();
                 if (routeNumber == 1)
                 {
-                    route.Enqueue("Main St");
-                    route.Enqueue("Turner Place");
-                    route.Enqueue("Microsoft Circle");
-                    route.Enqueue("Utopia Ln");
+                    route.Enqueue("A1");
+                    route.Enqueue("1B");
+                    route.Enqueue("B2");
+                    route.Enqueue("2C");
                 }
                 else if(routeNumber == 2)
                 {
@@ -145,6 +145,7 @@ namespace LightRoad
                 {
                     vPosition.x -= amount;
                 }
+                engine.setSpeed(amount);
             }
             public string getName()
             {

@@ -24,6 +24,10 @@ namespace LightRoad
             {
                 return eCurrentSpeed;
             }
+            public void setSpeed(double speed)
+            {
+                eCurrentSpeed = speed;
+            }
             public void Accelerate()
             {
                 if(eCurrentSpeed + ecAccelerationSpeed < ecMaxSpeed)
