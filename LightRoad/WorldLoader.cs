@@ -9,10 +9,10 @@ namespace LightRoad
 {
     public static class WorldLoader
     {
-        public static void LoadWorld(out World world, string filename)
+        public static void LoadWorld(out World world, string roadFilename, string intersectionsFilename)
         {
             world = new World();
-            StreamReader sr = File.OpenText(filename);
+            StreamReader sr = File.OpenText(roadFilename);
             while(!sr.EndOfStream)
             {
                 string[] data = sr.ReadLine().Split(',');
@@ -22,6 +22,14 @@ namespace LightRoad
                 float y2 = (float)Convert.ToDouble(data[3]);
                 string streetName = data[4];
                 world.addRoad(new Road(new Geometry.Vector2D(x1, y1), new Geometry.Vector2D(x2, y2), streetName));
+            }
+            StreamReader sr2 = File.OpenText(intersectionsFilename);
+            while(!sr2.EndOfStream)
+            {
+                string[] data = sr2.ReadLine().Split(',');
+                float x = Convert.ToInt32(data[0]);
+                float y = Convert.ToInt32(data[1]);
+                world.addIntersection(new Intersection(new Geometry.Vector2D(x, y), ref world));
             }
         }
     }

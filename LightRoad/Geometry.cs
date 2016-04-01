@@ -92,6 +92,28 @@ namespace LightRoad
                 width = awidth;
                 height = aheight;
             }
+            public BoundingBox2D(Vector2D startPosition, double alength)
+            {
+                x1 = startPosition.x;
+                y1 = startPosition.y;
+                width = alength;
+                height = alength;
+            }
+            public BoundingBox2D(Vector2D startPosition, double awidth, double aheight)
+            {
+                x1 = startPosition.x;
+                y1 = startPosition.y;
+                width = awidth;
+                height = aheight;
+            }
+            public BoundingBox2D(Vector2D startPosition, Vector2D endPosition)
+            {
+                x1 = startPosition.x;
+                width = endPosition.x - x1;
+                y1 = startPosition.y;
+                height = endPosition.y - y1;
+            }
+
             /// <summary>
             /// Checks to see if the current instance of BoundingBox2D intersects another BoundingBox2D.
             /// </summary>

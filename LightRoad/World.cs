@@ -12,6 +12,7 @@ namespace LightRoad
     {
         List<IWorldElement> roads = new List<IWorldElement>();
         List<IWorldElement> vehicles = new List<IWorldElement>();
+        List<IWorldElement> intersections = new List<IWorldElement>();
 
         public World()
         {
@@ -20,6 +21,10 @@ namespace LightRoad
         public void drawWorld(Graphics drawSurface, Vector2D origin)
         {
             foreach(IWorldElement i in roads)
+            {
+                i.Draw(drawSurface, origin);
+            }
+            foreach(IWorldElement i in intersections)
             {
                 i.Draw(drawSurface, origin);
             }
@@ -36,6 +41,10 @@ namespace LightRoad
         {
             vehicles.Add(e);
         }
+        public void addIntersection(IWorldElement e)
+        {
+            intersections.Add(e);
+        }
         public void step()
         {
             foreach(Vehicles.Vehicle i in vehicles)
@@ -46,6 +55,10 @@ namespace LightRoad
         public List<IWorldElement> getRoads()
         {
             return roads;
+        }
+        public List<IWorldElement> getIntersections()
+        {
+            return intersections;
         }
     }
 }

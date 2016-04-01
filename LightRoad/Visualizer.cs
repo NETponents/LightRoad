@@ -84,7 +84,6 @@ namespace LightRoad
 
         private void stepToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            
             simulationStepper.Start();
         }
 
@@ -97,7 +96,7 @@ namespace LightRoad
         private void Visualizer_Shown(object sender, EventArgs e)
         {
             World world;
-            WorldLoader.LoadWorld(out world, "roads.txt");
+            WorldLoader.LoadWorld(out world, "roads.txt", "intersections.txt");
             world.addVehicle(new Vehicles.Vehicle(world));
             this.publishWorld(ref world);
             simulationStepper = new System.Timers.Timer();
