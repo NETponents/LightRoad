@@ -82,5 +82,14 @@ namespace LightRoad
             }
             return 0;
         }
+        public List<string> getConnectedRoads()
+        {
+            List<string> roads = new List<string>();
+            foreach(Road i in connectors)
+            {
+                roads.Add(i.getName());
+            }
+            return roads;
+        }
     }
 }

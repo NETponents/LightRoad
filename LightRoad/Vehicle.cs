@@ -26,6 +26,7 @@ namespace LightRoad
             protected double vHeight;
             protected World worldRef;
             protected Queue<string> navigationWaypoints;
+            protected AI.AI aiEngine;
 
             private Engine engine;
             private string currentStreet = "EMPTY";
@@ -40,6 +41,7 @@ namespace LightRoad
                 vHeight = 5;
                 worldRef = worldPointer;
                 navigationWaypoints = generateNavigationRoute(1);
+                aiEngine = new AI.AIRandom();
             }
             public Vehicle(World worldPointer, Vector2D position)
             {
@@ -51,6 +53,7 @@ namespace LightRoad
                 vHeight = 5;
                 worldRef = worldPointer;
                 navigationWaypoints = generateNavigationRoute(1);
+                aiEngine = new AI.AIRandom();
             }
             public Vehicle(World worldPointer, Vector2D position, string name)
             {
@@ -62,6 +65,7 @@ namespace LightRoad
                 vHeight = 5;
                 worldRef = worldPointer;
                 navigationWaypoints = generateNavigationRoute(1);
+                aiEngine = new AI.AIRandom();
             }
             public Vehicle(World worldPointer, Vector2D position, string name, float direction)
             {
@@ -73,6 +77,7 @@ namespace LightRoad
                 vHeight = 5;
                 worldRef = worldPointer;
                 navigationWaypoints = generateNavigationRoute(1);
+                aiEngine = new AI.AIRandom();
             }
             public Vehicle(World worldPointer, Vector2D position, string name, float direction, int navRouteNumber)
             {
@@ -84,6 +89,7 @@ namespace LightRoad
                 vHeight = 5;
                 worldRef = worldPointer;
                 navigationWaypoints = generateNavigationRoute(navRouteNumber);
+                aiEngine = new AI.AIRandom();
             }
             public Queue<string> generateNavigationRoute(int routeNumber)
             {
@@ -119,7 +125,7 @@ namespace LightRoad
                     if(this.getBoundingBox().Intersects((i as Intersection).getBoundingBox()))
                     {
                         vPosition = (i as Intersection).getCenterPosition();
-                        currentStreet = navigationWaypoints.Dequeue();
+                        currentStreet = aiEngine.getNextTurn(ref worldRef, (i as Intersection), currentStreet);
                         vTravelDirection = (i as Intersection).getRoadDirection(currentStreet);
                         moveInCurrentDirection((float)Math.Max(vWidth, vHeight));
                         break;
