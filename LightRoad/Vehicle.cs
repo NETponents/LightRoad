@@ -27,10 +27,37 @@ namespace LightRoad
             protected World worldRef;
             protected Queue<string> navigationWaypoints;
             protected AI.AI aiEngine;
-            protected bool vCrashed = false;
+            protected bool vCrashed
+            {
+                get
+                {
+                    return hasCrashed;
+                }
+                set
+                {
+                    if(value)
+                    {
+                        Console.WriteLine(String.Format("Vehicle {0} has crashed.", vName));
+                    }
+                    hasCrashed = value;
+                }
+            }
 
+            private bool hasCrashed = false;
             private Engine engine;
-            private string currentStreet = "EMPTY";
+            private string currentStreet
+            {
+                get
+                {
+                    return vCurrentStreet;
+                }
+                set
+                {
+                    Console.WriteLine(String.Format("Vehicle {0} is now travelling on {1} at {2} MPH.", vName, value, engine.getSpeed()));
+                    vCurrentStreet = value;
+                }
+            }
+            private string vCurrentStreet = "EMPTY";
             private int crashDeadlockCheck = 0;
 
             public Vehicle(World worldPointer)
@@ -122,12 +149,13 @@ namespace LightRoad
             }
             public virtual void Travel()
             {
-                if(crashDeadlockCheck >= 3)
-                {
-                    vCrashed = true;
-                }
                 if (vCrashed)
                 {
+                    return;
+                }
+                if (crashDeadlockCheck >= 3)
+                {
+                    vCrashed = true;
                     return;
                 }
                 foreach (IWorldElement i in worldRef.getIntersections())
@@ -137,7 +165,7 @@ namespace LightRoad
                         vPosition = (i as Intersection).getCenterPosition();
                         currentStreet = aiEngine.getNextTurn(ref worldRef, (i as Intersection), currentStreet);
                         vTravelDirection = (i as Intersection).getRoadDirection(currentStreet);
-                        moveInCurrentDirection((float)Math.Max(vWidth, vHeight));
+                        moveInCurrentDirection(4 + ((float)Math.Max(vWidth, vHeight) / 2));
                         break;
                     }
                 }
@@ -208,16 +236,17 @@ namespace LightRoad
             }
             public void Draw(Graphics graphics, Vector2D origin)
             {
+                Font font = new Font(FontFamily.GenericSansSerif, 5);
                 Rectangle rectangle = new Rectangle((int)origin.x + (int)vRootPosition.x, (int)origin.y + (int)vRootPosition.y, (int)vWidth, (int)vHeight);
                 graphics.DrawRectangle(Pens.Red, rectangle);
-                graphics.DrawString(this.getSpeed() + " MPH", SystemFonts.DefaultFont, Brushes.White, new PointF((int)origin.x + (float)vRootPosition.x, (int)origin.y + (float)vRootPosition.y - 20));
+                graphics.DrawString(this.getSpeed() + " MPH", font, Brushes.White, new PointF((int)origin.x + (float)vRootPosition.x, (int)origin.y + (float)vRootPosition.y - 20));
                 if (vCrashed)
                 {
-                    graphics.DrawString(vName + "(CRASHED)", SystemFonts.DefaultFont, Brushes.White, new PointF((int)origin.x + (float)vRootPosition.x, (int)origin.y + (float)vRootPosition.y - 40));
+                    graphics.DrawString(vName + "(CRASHED)", font, Brushes.White, new PointF((int)origin.x + (float)vRootPosition.x, (int)origin.y + (float)vRootPosition.y - 40));
                 }
                 else
                 {
-                    graphics.DrawString(vName, SystemFonts.DefaultFont, Brushes.White, new PointF((int)origin.x + (float)vRootPosition.x, (int)origin.y + (float)vRootPosition.y - 40));
+                    graphics.DrawString(vName, font, Brushes.White, new PointF((int)origin.x + (float)vRootPosition.x, (int)origin.y + (float)vRootPosition.y - 40));
                 }
             }
             public string getCurrentStreetName()

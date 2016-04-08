@@ -20,17 +20,23 @@ namespace LightRoad
         private Vector2D center;
         private List<Road> connectors;
         private List<float> connDirection;
-        private const int size = 4;
+        private List<StopLight> connStopLights;
+        private const int size = 8;
 
         public Intersection(Vector2D centerPosition, ref World world)
         {
             connDirection = new List<float>();
             connectors = new List<Road>();
+            connStopLights = new List<StopLight>();
             center = centerPosition;
             Line n = new Line(position, new Vector2D(position.x + size, position.y));
             Line e = new Line(new Vector2D(position.x + size, position.y), new Vector2D(position.x + size, position.y + size));
             Line s = new Line(new Vector2D(position.x + size, position.y + size), new Vector2D(position.x, position.y + size));
             Line w = new Line(new Vector2D(position.x, position.y + size), position);
+            connStopLights.Add(new StopLight(n, 4, 1, StopLightColor.GREEN));
+            connStopLights.Add(new StopLight(s, 4, 1, StopLightColor.GREEN));
+            connStopLights.Add(new StopLight(e, 4, 1));
+            connStopLights.Add(new StopLight(w, 4, 1));
             foreach (IWorldElement i in world.getRoads())
             {
                 Road r = i as Road;
@@ -63,8 +69,12 @@ namespace LightRoad
         }
         public void Draw(Graphics graphics, Vector2D origin)
         {
-            Rectangle rectangle = new Rectangle((int)origin.x + (int)position.x, (int)origin.y + (int)position.y, size, size);
-            graphics.DrawRectangle(Pens.Blue, rectangle);
+            //Rectangle rectangle = new Rectangle((int)origin.x + (int)position.x, (int)origin.y + (int)position.y, size, size);
+            //graphics.DrawRectangle(Pens.Blue, rectangle);
+            foreach(StopLight sl in connStopLights)
+            {
+                sl.Draw(graphics, origin);
+            }
         }
         public Vector2D getCenterPosition()
         {
@@ -90,6 +100,13 @@ namespace LightRoad
                 roads.Add(i.getName());
             }
             return roads;
+        }
+        public void pulseStopLights()
+        {
+            foreach(StopLight sl in connStopLights)
+            {
+                sl.pulseSecond();
+            }
         }
     }
 }

@@ -19,6 +19,7 @@ namespace LightRoad
         World simWorld;
         Vector2D capturedPictureBoxSize;
         System.Timers.Timer simulationStepper;
+        System.Timers.Timer simulationStopLightTimer;
 
         public Visualizer()
         {
@@ -78,17 +79,28 @@ namespace LightRoad
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             simulationStepper = null;
+            simulationStopLightTimer = null;
             this.Close();
         }
 
         private void stepToolStripMenuItem_Click(object sender, EventArgs e)
         {
             simulationStepper.Start();
+            simulationStopLightTimer.Start();
         }
 
         private void SimulationStepper_Tick(object sender, EventArgs e)
         {
             simWorld.step();
+            pictureBox1_Paint(sender, null);
+        }
+
+        private void SimulationStopLightTimer_Tick(object sender, EventArgs e)
+        {
+            foreach(Intersection i in simWorld.getIntersections())
+            {
+                i.pulseStopLights();
+            }
             pictureBox1_Paint(sender, null);
         }
 
@@ -100,6 +112,9 @@ namespace LightRoad
             simulationStepper = new System.Timers.Timer();
             simulationStepper.Interval = 17;
             simulationStepper.Elapsed += SimulationStepper_Tick;
+            simulationStopLightTimer = new System.Timers.Timer();
+            simulationStopLightTimer.Interval = 1000;
+            simulationStopLightTimer.Elapsed += SimulationStopLightTimer_Tick;
         }
     }
 }

@@ -165,10 +165,30 @@ namespace LightRoad
                 startPos = start;
                 endPos = end;
             }
+            public static Line operator + (Line a, Vector2D b)
+            {
+                a.startPos += b;
+                a.endPos += b;
+                return a;
+            }
+            public static Line operator - (Line a, Vector2D b)
+            {
+                a.startPos -= b;
+                a.endPos -= b;
+                return a;
+            }
             public Line(double x1, double y1, double x2, double y2)
             {
                 startPos = new Vector2D(x1, y1);
                 endPos = new Vector2D(x2, y2);
+            }
+            public PointF startPointF()
+            {
+                return new PointF((float)startPos.x, (float)startPos.y);
+            }
+            public PointF endPointF()
+            {
+                return new PointF((float)endPos.x, (float)endPos.y);
             }
             public bool Intersection(Line l)
             {
