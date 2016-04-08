@@ -60,5 +60,9 @@ namespace LightRoad
         {
             return intersections;
         }
+        public List<IWorldElement> getVehicles()
+        {
+            return vehicles;
+        }
     }
 }

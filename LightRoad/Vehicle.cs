@@ -27,9 +27,11 @@ namespace LightRoad
             protected World worldRef;
             protected Queue<string> navigationWaypoints;
             protected AI.AI aiEngine;
+            protected bool vCrashed = false;
 
             private Engine engine;
             private string currentStreet = "EMPTY";
+            private int crashDeadlockCheck = 0;
 
             public Vehicle(World worldPointer)
             {
@@ -120,7 +122,15 @@ namespace LightRoad
             }
             public virtual void Travel()
             {
-                foreach(IWorldElement i in worldRef.getIntersections())
+                if(crashDeadlockCheck >= 3)
+                {
+                    vCrashed = true;
+                }
+                if (vCrashed)
+                {
+                    return;
+                }
+                foreach (IWorldElement i in worldRef.getIntersections())
                 {
                     if(this.getBoundingBox().Intersects((i as Intersection).getBoundingBox()))
                     {
@@ -135,7 +145,8 @@ namespace LightRoad
             }
             public void moveInCurrentDirection(float amount)
             {
-                if(vTravelDirection == 0)
+                Vector2D oldPosition = vPosition;
+                if (vTravelDirection == 0)
                 {
                     vPosition.y -= amount;
                 }
@@ -152,6 +163,31 @@ namespace LightRoad
                     vPosition.x -= amount;
                 }
                 engine.setSpeed(amount);
+                if(this.collidesWithVehicle())
+                {
+                    vPosition = oldPosition;
+                    engine.setSpeed(0);
+                    crashDeadlockCheck += 1;
+                }
+                else
+                {
+                    crashDeadlockCheck = 0;
+                }
+            }
+            private bool collidesWithVehicle()
+            {
+                foreach (Vehicle v in worldRef.getVehicles())
+                {
+                    if(v.Equals(this))
+                    {
+                        continue;
+                    }
+                    if (this.getBoundingBox().Intersects(v.getBoundingBox()))
+                    {
+                        return true;
+                    }
+                }
+                return false;
             }
             public string getName()
             {
@@ -175,7 +211,14 @@ namespace LightRoad
                 Rectangle rectangle = new Rectangle((int)origin.x + (int)vRootPosition.x, (int)origin.y + (int)vRootPosition.y, (int)vWidth, (int)vHeight);
                 graphics.DrawRectangle(Pens.Red, rectangle);
                 graphics.DrawString(this.getSpeed() + " MPH", SystemFonts.DefaultFont, Brushes.White, new PointF((int)origin.x + (float)vRootPosition.x, (int)origin.y + (float)vRootPosition.y - 20));
-                graphics.DrawString(vName, SystemFonts.DefaultFont, Brushes.White, new PointF((int)origin.x + (float)vRootPosition.x, (int)origin.y + (float)vRootPosition.y - 40));
+                if (vCrashed)
+                {
+                    graphics.DrawString(vName + "(CRASHED)", SystemFonts.DefaultFont, Brushes.White, new PointF((int)origin.x + (float)vRootPosition.x, (int)origin.y + (float)vRootPosition.y - 40));
+                }
+                else
+                {
+                    graphics.DrawString(vName, SystemFonts.DefaultFont, Brushes.White, new PointF((int)origin.x + (float)vRootPosition.x, (int)origin.y + (float)vRootPosition.y - 40));
+                }
             }
             public string getCurrentStreetName()
             {
