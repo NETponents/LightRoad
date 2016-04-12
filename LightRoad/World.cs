@@ -13,6 +13,7 @@ namespace LightRoad
         List<IWorldElement> roads = new List<IWorldElement>();
         List<IWorldElement> vehicles = new List<IWorldElement>();
         List<IWorldElement> intersections = new List<IWorldElement>();
+        bool firstStep = true;
 
         public World()
         {
@@ -47,7 +48,15 @@ namespace LightRoad
         }
         public void step()
         {
-            foreach(Vehicles.Vehicle i in vehicles)
+            if(firstStep)
+            {
+                foreach(Vehicles.Vehicle i in vehicles)
+                {
+                    i.initStep();
+                }
+                firstStep = false;
+            }
+            foreach (Vehicles.Vehicle i in vehicles)
             {
                 i.Travel();
             }

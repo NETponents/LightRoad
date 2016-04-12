@@ -101,6 +101,17 @@ namespace LightRoad
             }
             return roads;
         }
+        public StopLightColor lightColor(string currentStreet)
+        {
+            foreach(Road r in connectors)
+            {
+                if(r.getName() == currentStreet)
+                {
+                    return connStopLights[connectors.IndexOf(r)].getColor();
+                }
+            }
+            return StopLightColor.RED;
+        }
         public void pulseStopLights()
         {
             foreach(StopLight sl in connStopLights)

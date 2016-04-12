@@ -10,9 +10,10 @@ namespace LightRoad
     {
         public class AIRandom : AI
         {
+            private static Random rd;
             public AIRandom()
             {
-
+                rd = new Random();
             }
 
             public override string getNextTurn(ref World world, Intersection currentIntersection, string currentStreet)
@@ -25,7 +26,6 @@ namespace LightRoad
                 int choice = -1;
                 do
                 {
-                    Random rd = new Random();
                     choice = rd.Next(0, options.Count);
                 } while (options[choice] == currentStreet);
                 return options[choice];

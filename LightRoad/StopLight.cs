@@ -65,6 +65,10 @@ namespace LightRoad
                 return false;
             }
         }
+        public StopLightColor getColor()
+        {
+            return currentColor;
+        }
         private void switchColor()
         {
             if(currentColor == StopLightColor.GREEN)

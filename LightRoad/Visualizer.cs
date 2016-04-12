@@ -68,9 +68,19 @@ namespace LightRoad
             {
                 simWorld.drawWorld(g, drawOrigin);
             }
-            pictureBox1.Image = bmp;
-            g.Dispose();
-            pictureBox1.Invalidate();
+            try
+            {
+                pictureBox1.Image = bmp;
+            }
+            catch (InvalidOperationException ex)
+            {
+                Console.WriteLine("WARNING: Graphics handle error 0x001.");
+            }
+            finally
+            {
+                g.Dispose();
+                pictureBox1.Invalidate();
+            }
         }
         public void publishWorld(ref World w)
         {

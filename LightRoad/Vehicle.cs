@@ -44,6 +44,7 @@ namespace LightRoad
             }
 
             private bool hasCrashed = false;
+            private bool waitingOnLight = false;
             private Engine engine;
             private string currentStreet
             {
@@ -147,8 +148,19 @@ namespace LightRoad
             {
                 return new BoundingBox2D(vRootPosition.x, vRootPosition.y, vWidth, vHeight);
             }
+            public virtual void initStep()
+            {
+                foreach (IWorldElement i in worldRef.getIntersections())
+                {
+                    if (this.getBoundingBox().Intersects((i as Intersection).getBoundingBox()))
+                    {
+                        currentStreet = aiEngine.getNextTurn(ref worldRef, (i as Intersection), currentStreet);
+                    }
+                }
+            }
             public virtual void Travel()
             {
+                bool moveBlocked = false;
                 if (vCrashed)
                 {
                     return;
@@ -160,16 +172,34 @@ namespace LightRoad
                 }
                 foreach (IWorldElement i in worldRef.getIntersections())
                 {
-                    if(this.getBoundingBox().Intersects((i as Intersection).getBoundingBox()))
+                    if (this.getBoundingBox().Intersects((i as Intersection).getBoundingBox()))
                     {
-                        vPosition = (i as Intersection).getCenterPosition();
-                        currentStreet = aiEngine.getNextTurn(ref worldRef, (i as Intersection), currentStreet);
-                        vTravelDirection = (i as Intersection).getRoadDirection(currentStreet);
-                        moveInCurrentDirection(4 + ((float)Math.Max(vWidth, vHeight) / 2));
-                        break;
+                        if (!waitingOnLight || currentStreet == "")
+                        {
+                            currentStreet = aiEngine.getNextTurn(ref worldRef, (i as Intersection), currentStreet);
+                            vTravelDirection = (i as Intersection).getRoadDirection(currentStreet);
+                        }
+                        if ((i as Intersection).lightColor(currentStreet) == StopLightColor.RED)
+                        {
+                            waitingOnLight = true;
+                            // Do nothing until light turns green.
+                            engine.setSpeed(0);
+                            moveBlocked = true;
+                            break;
+                        }
+                        else
+                        {
+                            waitingOnLight = false;
+                            vPosition = (i as Intersection).getCenterPosition();
+                            moveInCurrentDirection(4 + ((float)Math.Max(vWidth, vHeight) / 2));
+                            break;
+                        }
                     }
                 }
-                moveInCurrentDirection(1.0f);
+                if (!moveBlocked)
+                {
+                    moveInCurrentDirection(1.0f);
+                }
             }
             public void moveInCurrentDirection(float amount)
             {
@@ -191,16 +221,16 @@ namespace LightRoad
                     vPosition.x -= amount;
                 }
                 engine.setSpeed(amount);
-                if(this.collidesWithVehicle())
-                {
-                    vPosition = oldPosition;
-                    engine.setSpeed(0);
-                    crashDeadlockCheck += 1;
-                }
-                else
-                {
+                //if(this.collidesWithVehicle())
+                //{
+                //    vPosition = oldPosition;
+                //    engine.setSpeed(0);
+                //    crashDeadlockCheck += 1;
+                //}
+                //else
+                //{
                     crashDeadlockCheck = 0;
-                }
+                //}
             }
             private bool collidesWithVehicle()
             {
