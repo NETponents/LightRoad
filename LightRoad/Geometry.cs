@@ -27,6 +27,10 @@ namespace LightRoad
             {
                 return new Vector2D(a.x - b.x, a.y - b.y);
             }
+            public static Vector2D operator * (Vector2D a, float b)
+            {
+                return new Vector2D(a.x * b, a.y * b);
+            }
             public static bool operator == (Vector2D a, Vector2D b)
             {
                 if(a.x == b.x && a.y == b.y)
@@ -165,17 +169,23 @@ namespace LightRoad
                 startPos = start;
                 endPos = end;
             }
-            public static Line operator + (Line a, Vector2D b)
+            public static Line operator +(Line a, Vector2D b)
             {
                 a.startPos += b;
                 a.endPos += b;
                 return a;
             }
-            public static Line operator - (Line a, Vector2D b)
+            public static Line operator -(Line a, Vector2D b)
             {
                 a.startPos -= b;
                 a.endPos -= b;
                 return a;
+            }
+            public static Line operator * (Line a, float b)
+            {
+                Vector2D p1 = a.startPos * b;
+                Vector2D p2 = a.endPos * b;
+                return new Line(p1, p2);
             }
             public Line(double x1, double y1, double x2, double y2)
             {
@@ -221,6 +231,19 @@ namespace LightRoad
                 //intersection = a1 + t * b;
 
                 return true;
+            }
+        }
+        public static class Overloads
+        {
+            public static Rectangle MultiplyPointsRect(Rectangle a, float b)
+            {
+                return new Rectangle((int)(a.X * b), (int)(a.Y * b), (int)(a.Width * b), (int)(a.Height * b));
+            }
+            public static Rectangle AddVector2DRect(Rectangle a, Vector2D b)
+            {
+                a.X += (int)b.x;
+                a.Y += (int)b.y;
+                return a;
             }
         }
     }

@@ -67,8 +67,8 @@ namespace LightRoad
                 vPosition = new Vector2D(0.0f, 0.0f);
                 vTravelDirection = 0.0f;
                 engine = new Engine();
-                vWidth = 5;
-                vHeight = 5;
+                vWidth = 4;
+                vHeight = 4;
                 worldRef = worldPointer;
                 navigationWaypoints = generateNavigationRoute(1);
                 aiEngine = new AI.AIRandom();
@@ -79,8 +79,8 @@ namespace LightRoad
                 vPosition = position;
                 vTravelDirection = 0.0f;
                 engine = new Engine();
-                vWidth = 5;
-                vHeight = 5;
+                vWidth = 4;
+                vHeight = 4;
                 worldRef = worldPointer;
                 navigationWaypoints = generateNavigationRoute(1);
                 aiEngine = new AI.AIRandom();
@@ -91,8 +91,8 @@ namespace LightRoad
                 vPosition = position;
                 vTravelDirection = 0.0f;
                 engine = new Engine();
-                vWidth = 5;
-                vHeight = 5;
+                vWidth = 4;
+                vHeight = 4;
                 worldRef = worldPointer;
                 navigationWaypoints = generateNavigationRoute(1);
                 aiEngine = new AI.AIRandom();
@@ -103,8 +103,8 @@ namespace LightRoad
                 vPosition = position;
                 vTravelDirection = direction;
                 engine = new Engine();
-                vWidth = 5;
-                vHeight = 5;
+                vWidth = 4;
+                vHeight = 4;
                 worldRef = worldPointer;
                 navigationWaypoints = generateNavigationRoute(1);
                 aiEngine = new AI.AIRandom();
@@ -115,8 +115,8 @@ namespace LightRoad
                 vPosition = position;
                 vTravelDirection = direction;
                 engine = new Engine();
-                vWidth = 5;
-                vHeight = 5;
+                vWidth = 4;
+                vHeight = 4;
                 worldRef = worldPointer;
                 navigationWaypoints = generateNavigationRoute(navRouteNumber);
                 aiEngine = new AI.AIRandom();
@@ -177,7 +177,7 @@ namespace LightRoad
                         if (!waitingOnLight || currentStreet == "")
                         {
                             currentStreet = aiEngine.getNextTurn(ref worldRef, (i as Intersection), currentStreet);
-                            vTravelDirection = (i as Intersection).getRoadDirection(currentStreet);
+                            //vTravelDirection = (i as Intersection).getRoadDirection(currentStreet);
                         }
                         if ((i as Intersection).lightColor(currentStreet) == StopLightColor.RED)
                         {
@@ -187,9 +187,11 @@ namespace LightRoad
                             moveBlocked = true;
                             break;
                         }
-                        else
+                        else if((i as Intersection).lightColor(currentStreet) == StopLightColor.GREEN)
                         {
                             waitingOnLight = false;
+                            engine.setSpeed(1);
+                            vTravelDirection = (i as Intersection).getRoadDirection(currentStreet);
                             vPosition = (i as Intersection).getCenterPosition();
                             moveInCurrentDirection(4 + ((float)Math.Max(vWidth, vHeight) / 2));
                             break;
@@ -204,6 +206,7 @@ namespace LightRoad
             public void moveInCurrentDirection(float amount)
             {
                 Vector2D oldPosition = vPosition;
+                amount *= (float)engine.getSpeed();
                 if (vTravelDirection == 0)
                 {
                     vPosition.y -= amount;
@@ -220,7 +223,7 @@ namespace LightRoad
                 {
                     vPosition.x -= amount;
                 }
-                engine.setSpeed(amount);
+                //engine.setSpeed(amount);
                 //if(this.collidesWithVehicle())
                 //{
                 //    vPosition = oldPosition;
@@ -264,10 +267,11 @@ namespace LightRoad
                 //TODO: implement impact response code
                 impactDirection %= 360;
             }
-            public void Draw(Graphics graphics, Vector2D origin)
+            public void Draw(Graphics graphics, Vector2D origin, float scale)
             {
-                Font font = new Font(FontFamily.GenericSansSerif, 5);
-                Rectangle rectangle = new Rectangle((int)origin.x + (int)vRootPosition.x, (int)origin.y + (int)vRootPosition.y, (int)vWidth, (int)vHeight);
+                Font font = new Font(FontFamily.GenericSansSerif, 5 * scale);
+                Rectangle r = Overloads.MultiplyPointsRect(new Rectangle((int)vRootPosition.x, (int)vRootPosition.y, (int)vWidth, (int)vHeight), scale);
+                Rectangle rectangle = Overloads.AddVector2DRect(r, origin);
                 graphics.DrawRectangle(Pens.Red, rectangle);
                 graphics.DrawString(this.getSpeed() + " MPH", font, Brushes.White, new PointF((int)origin.x + (float)vRootPosition.x, (int)origin.y + (float)vRootPosition.y - 20));
                 if (vCrashed)

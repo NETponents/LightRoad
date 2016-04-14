@@ -21,13 +21,17 @@ namespace LightRoad
             name = streetName;
         }
 
-        public void Draw(Graphics graphics, Vector2D origin)
+        public void Draw(Graphics graphics, Vector2D origin, float scale)
         {
+            Vector2D a = startPoint;
+            Vector2D b = endPoint;
+            a *= scale;
+            b *= scale;
             graphics.DrawLine(Pens.White,
-                (float)origin.x + (float)startPoint.x,
-                (float)origin.y + (float)startPoint.y,
-                (float)origin.x + (float)endPoint.x,
-                (float)origin.y + (float)endPoint.y);
+                (float)origin.x + ((float)startPoint.x * scale),
+                (float)origin.y + ((float)startPoint.y * scale),
+                (float)origin.x + ((float)endPoint.x * scale),
+                (float)origin.y + ((float)endPoint.y) * scale);
         }
         public string getName()
         {

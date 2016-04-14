@@ -34,8 +34,8 @@ namespace LightRoad
             Line s = new Line(new Vector2D(position.x + size, position.y + size), new Vector2D(position.x, position.y + size));
             Line w = new Line(new Vector2D(position.x, position.y + size), position);
             connStopLights.Add(new StopLight(n, 4, 1, StopLightColor.GREEN));
-            connStopLights.Add(new StopLight(s, 4, 1, StopLightColor.GREEN));
             connStopLights.Add(new StopLight(e, 4, 1));
+            connStopLights.Add(new StopLight(s, 4, 1, StopLightColor.GREEN));
             connStopLights.Add(new StopLight(w, 4, 1));
             foreach (IWorldElement i in world.getRoads())
             {
@@ -67,13 +67,13 @@ namespace LightRoad
         {
             return new BoundingBox2D(position, size);
         }
-        public void Draw(Graphics graphics, Vector2D origin)
+        public void Draw(Graphics graphics, Vector2D origin, float scale)
         {
             //Rectangle rectangle = new Rectangle((int)origin.x + (int)position.x, (int)origin.y + (int)position.y, size, size);
             //graphics.DrawRectangle(Pens.Blue, rectangle);
             foreach(StopLight sl in connStopLights)
             {
-                sl.Draw(graphics, origin);
+                sl.Draw(graphics, origin, scale);
             }
         }
         public Vector2D getCenterPosition()

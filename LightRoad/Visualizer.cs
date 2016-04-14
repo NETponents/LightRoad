@@ -20,6 +20,7 @@ namespace LightRoad
         Vector2D capturedPictureBoxSize;
         System.Timers.Timer simulationStepper;
         System.Timers.Timer simulationStopLightTimer;
+        float drawScale = 1.0f;
 
         public Visualizer()
         {
@@ -66,7 +67,7 @@ namespace LightRoad
             g.Clear(Color.Black);
             if (simWorld != null)
             {
-                simWorld.drawWorld(g, drawOrigin);
+                simWorld.drawWorld(g, drawOrigin, drawScale);
             }
             try
             {
@@ -125,6 +126,16 @@ namespace LightRoad
             simulationStopLightTimer = new System.Timers.Timer();
             simulationStopLightTimer.Interval = 1000;
             simulationStopLightTimer.Elapsed += SimulationStopLightTimer_Tick;
+        }
+
+        private void zoomInToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            drawScale += 0.25f;
+        }
+
+        private void zoomOutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            drawScale = Math.Max(drawScale - 0.25f, 0.25f);
         }
     }
 }

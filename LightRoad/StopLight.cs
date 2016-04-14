@@ -40,9 +40,9 @@ namespace LightRoad
             switchSecond = switchTime;
             currentSecondCounter = currentStep;
         }
-        public void Draw(Graphics graphics, Vector2D origin)
+        public void Draw(Graphics graphics, Vector2D origin, float scale)
         {
-            Line drawItem = drawableElement + origin;
+            Line drawItem = (drawableElement * scale) + origin;
             graphics.DrawLine(this.getDrawableColor(), drawItem.startPointF(), drawItem.endPointF());
         }
         public void pulseSecond()

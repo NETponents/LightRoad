@@ -19,19 +19,19 @@ namespace LightRoad
         {
 
         }
-        public void drawWorld(Graphics drawSurface, Vector2D origin)
+        public void drawWorld(Graphics drawSurface, Vector2D origin, float scale)
         {
             foreach(IWorldElement i in roads)
             {
-                i.Draw(drawSurface, origin);
+                i.Draw(drawSurface, origin, scale);
             }
             foreach(IWorldElement i in intersections)
             {
-                i.Draw(drawSurface, origin);
+                i.Draw(drawSurface, origin, scale);
             }
             foreach(IWorldElement i in vehicles)
             {
-                i.Draw(drawSurface, origin);
+                i.Draw(drawSurface, origin, scale);
             }
         }
         public void addRoad(IWorldElement e)
